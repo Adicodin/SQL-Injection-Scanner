@@ -1,0 +1,3 @@
+URL, Error-Based Payloads, Time-Based Payloads, Union-Based Payloads, Order-By Payloads, Auth-Based Payloads, Boolean-Based Payloads""
+http://testphp.vulnweb.com/listproducts.php?cat=1,😈 Potential error-based payload found: ',✅ No time-based payload found.,✅ No union-based payload found.,✅ No Auth Bypass Payload found.,✅ No ORDER BY payload found.,✅ No boolean-based payload found.
+https://www.cliqnship.com/login.php?log=true,✅ No error-based payload found.,✅ No time-based payload found.,✅ No union-based payload found.,✅ No Auth Bypass Payload found.,✅ No ORDER BY payload found.,✅ No boolean-based payload found.

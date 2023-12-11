@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            overflow: auto;
+            background-color: #000;
+            color: #00ff00;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #222;
+            border: 1px solid #555;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            overflow: auto;
+        }
+
+        a {
+            color: white;
+            text-decoration-line: none;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        code {
+            /* background-color: #333; */
+            padding: 15px;
+            /* border: 1px solid #555; */
+            margin: 20px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        a {
+            color: white;
+            text-decoration-line: none;
+        }
+    </style>
+</head>
+<body>
+    <header><h1>Prevention Steps for SQLi Attacks</h1></header>
+    
+
+    <div class="container">
+        <h2>1. Prepared Statements (with Parameterized Queries):</h2>
+        <code>
+            # Connect to the database
+            conn = sqlite3.connect("example.db")
+
+            # Get user input
+            user_input = input("Enter username: ")
+
+            # Use a prepared statement to prevent SQL injection
+            query = "SELECT * FROM users WHERE username = ?"
+
+            # Execute the query with user input
+            cursor = conn.cursor()
+            cursor.execute(query, (user_input,))
+
+            # Get the results
+            results = cursor.fetchall()
+        </code>
+        <p><strong>Explanation:</strong> In this code snippet, we connect to the database, take user input, and use a prepared statement to construct a safe query. The ? acts as a placeholder for user input, preventing SQL injection. Finally, we execute the query and fetch the results.</p>
+    </div>
+
+    <div class="container">
+        <h2>2. Stored Procedures:</h2>
+        <code>
+            # Connect to the database
+            conn = mysql.connector.connect(user='root', password='password', database='example')
+
+            # Get user input
+            user_input = input("Enter username: ")
+
+            # Call a stored procedure with user input
+            cursor = conn.cursor()
+            cursor.callproc("sp_getAccountBalance", (user_input,))
+
+            # Get the results
+            results = cursor.fetchall()
+        </code>
+        <p><strong>Explanation:</strong> In this example, we establish a connection to the MySQL database, take user input, and call a stored procedure (sp_getAccountBalance) with the provided input. The results from the stored procedure are then fetched.</p>
+    </div>
+
+    <div class="container">
+        <h2>3. Allow-list Input Validation:</h2>
+        <code>
+            # Get user input
+            param = input("Enter parameter: ")
+
+            # Validate input against an allow-list
+            table_name = ""
+            if param == "Value1":
+                table_name = "fooTable"
+            elif param == "Value2":
+                table_name = "barTable"
+            else:
+                raise ValueError("Unexpected value for table name")
+        </code>
+        <p><strong>Explanation:</strong> In this snippet, we take user input and validate it against an allow-list. Depending on the input, we set the table_name to a predefined value. This ensures that only expected and safe inputs are accepted.</p>
+    </div>
+
+    <div class="container">
+        <h2>4. Escaping All User-Supplied Input (Discouraged):</h2>
+        <code>
+            # Get user input
+            user_input = input("Enter user input: ")
+
+            # Not recommended, but if needed, escape user input
+            escaped_input = conn.escape(user_input)
+
+            # Use the escaped input in a query
+            query = f"SELECT * FROM user_data WHERE name = '{escaped_input}'"
+        </code>
+        <p><strong>Explanation:</strong> Here, we take user input and, as a discouraged practice, escape it before using it in a query. This approach is not recommended due to potential vulnerabilities, and other methods like prepared statements are preferred.</p>
+    </div>
+
+    <div class="container">
+        <h2>Additional Defenses:</h2>
+        <p><strong>- Least Privilege:</strong></p>
+        <p><strong>Explanation:</strong> Assigning the least privilege principle means providing the minimum necessary access rights to database accounts. This ensures that each account has precisely the permissions it needs and no more, reducing the risk of unauthorized access.</p>
+
+        <p><strong>- Enhancing Least Privilege with SQL Views:</strong></p>
+        <p><strong>Explanation:</strong> Using SQL views provides an additional layer of security by limiting access to specific fields or joins of tables. It enhances the granularity of access control, allowing you to tailor views for specific needs while keeping the underlying data secure.</p>
+
+        <p><strong>- Allow-list Input Validation (Secondary Defense):</strong></p>
+        <p><strong>Explanation:</strong> Allow-list input validation acts as a secondary defense by double-checking the user input against an allow-list, even when other defense mechanisms are in place. This adds an extra layer of security, ensuring that only authorized input is processed.</p>
+    </div>
+    <div class="container">
+        <p>Reference Taken From : <a href="https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html" style="text-decoration-line: underline;">OWASP SQLi Prevention Cheat Sheet</a></p>
+    </div>
+</body>
+</html>

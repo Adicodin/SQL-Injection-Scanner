@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+
+
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            overflow: auto;
+            background-color: #000;
+            color: #00ff00;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+
+
+        a {
+            color: white;
+            text-decoration-line: none;
+        }
+
+
+
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+
+
+
+
+
+
+
+        #quote {
+            text-align: center;
+            margin: 20px;
+            font-size: 24px;
+            flex-grow: 1;
+        }
+
+
+
+
+
+
+
+
+        #url-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+        }
+
+
+
+
+
+
+
+
+        #url-input {
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+
+
+
+
+
+
+
+        #scan-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+
+
+
+
+
+
+
+        #results {
+            text-align: left;
+            margin: 20px;
+        }
+
+
+
+
+
+
+
+
+        #command-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+
+
+
+
+
+
+
+        .falling-binary {
+            position: absolute;
+            font-size: 16px;
+            animation: fall linear infinite;
+            animation-duration: 2s;
+            opacity: 0.7;
+            white-space: nowrap;
+        }
+
+
+        @keyframes fall {
+            from {
+                transform: translateY(-100vh);
+            }
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+
+       
+        #faq-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #222;
+            color: #fff;
+            border-radius: 10px;
+        }
+
+
+        details {
+            margin-bottom: 20px;
+        }
+
+
+        summary {
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 10px;
+            background-color: #333;
+            border: 1px solid #555;
+            border-radius: 5px;
+        }
+
+
+        p {
+            margin-top: 10px;
+        }
+       
+        #loading-container {
+        margin: 20px;
+        width: 100%;
+        position: relative;
+        display: none; /* Initially hide the loading container */
+    }
+
+    .loading {
+        color: #fff;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    </style>
+    <title>SQLiScan</title>
+</head>
+
+<body>
+
+    <div id="command-line">
+        <!-- Falling letters will be added dynamically here -->
+    </div>
+
+
+    <header>
+        <a href={{url_for('success')}}>
+            <h1>
+                <strong>SQLiScan</strong>
+            </h1>
+        </a>
+    </header>
+
+
+    <div id="quote">
+        <p>Are you sure your website is safe? Test your website for SQL injections now!!</p>
+    </div>
+
+
+    <div id="url-form">
+        <form action="#" method="post">
+            <input type="text" id="url-input" name="nm" placeholder="Enter URL">
+            <button id="scan-button" type="submit">Scan</button>
+        </form>
+    </div>
+
+    <div id="loading-container">
+        <div class="loading">Loading...</div>
+    </div>
+
+    <div id="results">
+        <!-- Results will be displayed here -->
+        <h2 style="text-align: center;">{{u}}</h2><br>
+        {% for i in content %}
+        <h3>
+            {{i}}
+        </h3>
+        {%endfor%}
+    </div>
+
+
+    <!-- Frequently Asked Questions -->
+    <div id="faq-section">
+        <h2 style="color: #4CAF50;">Frequently Asked Questions</h2>
+
+
+        <!-- FAQ 1 -->
+        <details>
+            <summary>What is SQL injection?</summary>
+            <p>SQL injection is a code injection technique where an attacker can execute malicious SQL statements...</p>
+        </details>
+
+
+        <!-- FAQ 2 -->
+        <details>
+            <summary>How does SQLiScan protect my website?</summary>
+            <p>SQLiScan checks for all the types of sql injection possible and tells about all the vulnerabilities.</p>
+        </details>
+
+
+        <!-- FAQ 3 -->
+        <details>
+            <summary>Is SQLiScan compatible with all databases?</summary>
+            <p>SQLiScan is designed to work with MySQL .</p>
+        </details>
+
+
+        <details>
+            <summary>How many types of SQL injections are there?</summary>
+            <p>There are 5 types of SQL injections - error based, boolean based, time based, union based and authorization based.</p>
+        </details>
+
+
+        <details>
+            <summary>What type of URL does it accept?</summary>
+            <p>It accepts only URL's which use get method.</p>
+        </details>
+
+        <details>
+            <summary>How do I prevent my site from SQLi Attacks</summary>
+            <p>
+                <a href={{url_for('prevent')}} style="text-decoration-line: underline;" target="_blank">
+                    <strong>Click here to know how to prevent from this attack.</strong>
+                </a>
+            </p>
+        </details>
+
+
+    </div>
+
+
+    <script>
+        // Function to create falling binary elements
+        function createFallingBinary() {
+            const commandLine = document.getElementById('command-line');
+            const binaryValues = ['0', '1'];
+           
+            for (let i = 0; i < 100; i++) {
+                const fallingBinary = document.createElement('span');
+                fallingBinary.className = 'falling-binary';
+                fallingBinary.innerText = binaryValues[Math.floor(Math.random() * binaryValues.length)];
+                fallingBinary.style.left = `${Math.random() * 100}vw`;
+                fallingBinary.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                commandLine.appendChild(fallingBinary);
+            }
+        }
+
+
+        // Call the function to create falling binary elements
+        createFallingBinary();
+
+
+          // Function to show and hide the loading indicator
+    function toggleLoading(show) {
+        const loadingContainer = document.getElementById('loading-container');
+        loadingContainer.style.display = show ? 'block' : 'none';
+
+        // Optionally, you can hide/show other elements based on the loading indicator visibility
+        const urlForm = document.getElementById('url-form');
+        const resultsContainer = document.getElementById('results');
+        urlForm.style.display = show ? 'none' : 'flex';
+        resultsContainer.style.display = show ? 'none' : 'block';
+    }
+
+    // Initialize the loading indicator as hidden
+    toggleLoading(false);
+
+    // Add an event listener to the Scan button
+    const scanButton = document.getElementById('scan-button');
+    scanButton.addEventListener('click', function () {
+        // Show the loading indicator when the button is clicked
+        toggleLoading(true);
+
+        // Make an AJAX request to the server
+        const xhr = new XMLHttpRequest();
+        const urlInput = document.getElementById('url-input').value;
+        xhr.open('POST', '/', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Update the results container with the new content
+                const resultsContainer = document.getElementById('results');
+                resultsContainer.innerHTML = xhr.responseText;
+
+                // Hide the loading indicator when the POST request is completed
+                toggleLoading(false);
+            }
+        };
+        xhr.send('nm=' + encodeURIComponent(urlInput));
+    });
+    </script>
+</body>
+</html>
